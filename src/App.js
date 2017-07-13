@@ -9,11 +9,26 @@ class App extends Component {
     super(props)
 
     this.state = {
-      messages: emailData
+      messages: emailData,
     }
+
+    // this.updateSelectAllIcon = this.updateSelectAllIcon.bind(this);
     this.updateAll = this.updateAll.bind(this);
     this.updateMultipleMessages = this.updateMultipleMessages.bind(this);
     this.updateState = this.updateState.bind(this);
+  }
+
+  calculateSelected() {
+    let selectAll = 'minus-';
+    let selectedMsgs = this.state.messages.filter(msg => msg.selected === true);
+
+    if(!selectedMsgs.length) {
+      selectAll = '';
+    } else if(selectedMsgs.length === this.state.messages.length) {
+      selectAll = 'check-';
+    }
+
+    return selectAll;
   }
 
   updateAll(update) {
@@ -56,11 +71,14 @@ class App extends Component {
       <div className="container-fluid">
         <Toolbar
           emailData={this.state.messages}
+          selectAll={this.state.selectAll}
+          calculateSelected={this.calculateSelected()}
           updateAll={this.updateAll}
           updateMultipleMessages={this.updateMultipleMessages}
         />
         <MessageList
           emailData={this.state.messages}
+          selectAll={this.state.selectAll}
           updateState={this.updateState}
         />
       </div>

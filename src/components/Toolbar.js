@@ -1,23 +1,13 @@
 import React, { Component } from 'react';
 
 class Toolbar extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      selectAll: 'minus-',
-    }
-  }
 
   selectAllMessages() {
-    let selectAll
-    if(this.state.selectAll === '') {
-      selectAll = 'check-';
+    if(this.props.calculateSelected !== 'check-') {
       this.props.updateAll({selected: true})
     } else {
-      selectAll = '';
       this.props.updateAll({selected: false})
     }
-    this.setState({selectAll});
   }
 
   markReadMessages() {
@@ -28,10 +18,8 @@ class Toolbar extends Component {
     this.props.updateMultipleMessages({selected: true}, {read: false})
   }
 
-  //toolbar checked status box - onClick(selected) loop over messages and check if any single message has {selected: true}
-  //      --> return fa-minus-box
-
   render () {
+
     return (
       <div className="row toolbar">
         <div className="col-md-12">
@@ -41,7 +29,7 @@ class Toolbar extends Component {
           </p>
 
           <button className="btn btn-default" onClick={() => this.selectAllMessages()}>
-            <i className={`fa fa-${this.state.selectAll}square-o`}></i>
+            <i className={`fa fa-${this.props.calculateSelected}square-o`}></i>
           </button>
 
           <button className="btn btn-default" onClick={() => this.markReadMessages()}>

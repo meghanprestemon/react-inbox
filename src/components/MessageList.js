@@ -15,6 +15,7 @@ class MessageList extends Component {
             starred={email.starred}
             read={email.read}
             subject={email.subject}
+            selectAll={this.props.selectAll}
             updateState={this.props.updateState}
           />
         )}
