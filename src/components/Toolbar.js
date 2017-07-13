@@ -4,21 +4,32 @@ class Toolbar extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectAll: 'minus',
+      selectAll: 'minus-',
     }
   }
 
   selectAllMessages() {
     let selectAll
-    if(this.state.selectAll === 'minus') {
-      selectAll = 'check';
+    if(this.state.selectAll === '') {
+      selectAll = 'check-';
       this.props.updateAll({selected: true})
     } else {
-      selectAll = 'minus';
+      selectAll = '';
       this.props.updateAll({selected: false})
     }
     this.setState({selectAll});
   }
+
+  markReadMessages() {
+    this.props.updateMultipleMessages({selected: true}, {read: true})
+  }
+
+  markUnreadMessages() {
+    this.props.updateMultipleMessages({selected: true}, {read: false})
+  }
+
+  //toolbar checked status box - onClick(selected) loop over messages and check if any single message has {selected: true}
+  //      --> return fa-minus-box
 
   render () {
     return (
@@ -30,14 +41,14 @@ class Toolbar extends Component {
           </p>
 
           <button className="btn btn-default" onClick={() => this.selectAllMessages()}>
-            <i className={`fa fa-${this.state.selectAll}-square-o`}></i>
+            <i className={`fa fa-${this.state.selectAll}square-o`}></i>
           </button>
 
-          <button className="btn btn-default">
+          <button className="btn btn-default" onClick={() => this.markReadMessages()}>
             Mark As Read
           </button>
 
-          <button className="btn btn-default">
+          <button className="btn btn-default" onClick={() => this.markUnreadMessages()}>
             Mark As Unread
           </button>
 
@@ -64,8 +75,9 @@ class Toolbar extends Component {
   }
 }
 
-//bulk select/deselect
-//mark message as unread
+//bulk select/deselect **
+//mark message as read **
+//mark message as unread **
 //delete messages
 //add label
 //remove label

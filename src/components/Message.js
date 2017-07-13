@@ -42,7 +42,7 @@ class Message extends Component {
   }
 }
 
-//Starring
-//Selecting individual messages
+//Starring **
+//Selecting individual messages **
 
 export default Message;

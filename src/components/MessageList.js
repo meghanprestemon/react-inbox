@@ -23,6 +23,6 @@ class MessageList extends Component {
   }
 }
 
-//Message Display
+//Message Display **
 
 export default MessageList;

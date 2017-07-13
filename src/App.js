@@ -12,6 +12,7 @@ class App extends Component {
       messages: emailData
     }
     this.updateAll = this.updateAll.bind(this);
+    this.updateMultipleMessages = this.updateMultipleMessages.bind(this);
     this.updateState = this.updateState.bind(this);
   }
 
@@ -20,17 +21,48 @@ class App extends Component {
     this.setState({messages})
   }
 
+  updateMultipleMessages(condition, update) {
+    let msgKey = Object.keys(condition)[0];
+    let messages = [];
+
+    this.state.messages.forEach(msg => {
+      if(msg[msgKey] === Object.values(condition)[0]) {
+        messages.push(Object.assign({}, msg, update));
+      } else {
+        messages.push(msg);
+      }
+    });
+
+    this.setState({messages})
+  }
+
   updateState(messageId, update) {
-    let message = this.state.messages.find(msg => msg.id === messageId);
-    Object.assign(message, update)
-    this.setState({});
+    this.setState((prevState) => {
+      let message = prevState.messages.find(msg => msg.id === messageId);
+      let index = prevState.messages.indexOf(message);
+      let msgKey = Object.keys(update)[0];
+      return {
+        messages: [
+          ...prevState.messages.slice(0, index),
+          {...message, [msgKey]: update[msgKey]},
+          ...prevState.messages.slice(index + 1)
+        ]
+      }
+    });
   }
 
   render() {
     return (
       <div className="container-fluid">
-        <Toolbar updateAll={this.updateAll}/>
-        <MessageList emailData={this.state.messages} updateState={this.updateState}/>
+        <Toolbar
+          emailData={this.state.messages}
+          updateAll={this.updateAll}
+          updateMultipleMessages={this.updateMultipleMessages}
+        />
+        <MessageList
+          emailData={this.state.messages}
+          updateState={this.updateState}
+        />
       </div>
     );
   }

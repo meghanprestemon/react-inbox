@@ -11,6 +11,4 @@ class Labels extends Component {
   }
 }
 
-//Message Display
-
 export default Labels;
