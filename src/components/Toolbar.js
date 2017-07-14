@@ -34,9 +34,9 @@ class Toolbar extends Component {
     this.props.updateLabelState(selectedLabel);
   }
 
-  // deleteMessages() {
-  //   this.props.updateMultipleMessages({selected: true}, )
-  // }
+  deleteMessages() {
+    this.props.updateRemovedMessages();
+  }
 
   render () {
 

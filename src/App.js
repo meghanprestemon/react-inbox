@@ -11,6 +11,7 @@ class App extends Component {
       messages: emailData,
     }
 
+    this.updateRemovedMessages = this.updateRemovedMessages.bind(this);
     this.updateLabelState = this.updateLabelState.bind(this);
     this.updateAll = this.updateAll.bind(this);
     this.updateMultipleMessages = this.updateMultipleMessages.bind(this);
@@ -53,6 +54,18 @@ class App extends Component {
 
 
 //SET.STATE FUNCTIONS
+  updateRemovedMessages() {
+    let messages = [];
+
+    this.state.messages.forEach(msg => {
+      if(!msg.selected) {
+        messages.push(msg)
+      }
+    });
+
+    this.setState({messages})
+  }
+
   updateLabelState(newLabel, add) {
     let messages = [];
     let msgLabels;
@@ -114,6 +127,7 @@ class App extends Component {
           emailData={this.state.messages}
           unreadMessageCount={this.unreadMessageCount()}
           calculateSelected={this.calculateSelected()}
+          updateRemovedMessages={this.updateRemovedMessages}
           updateLabelState={this.updateLabelState}
           updateAll={this.updateAll}
           updateMultipleMessages={this.updateMultipleMessages}
