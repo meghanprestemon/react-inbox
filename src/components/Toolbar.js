@@ -11,12 +11,32 @@ class Toolbar extends Component {
   }
 
   markReadMessages() {
-    this.props.updateMultipleMessages({selected: true}, {read: true})
+    this.props.updateMultipleMessages({read: true})
   }
 
   markUnreadMessages() {
-    this.props.updateMultipleMessages({selected: true}, {read: false})
+    this.props.updateMultipleMessages({read: false})
   }
+
+  addLabel(event) {
+    let newLabel = event.target.value;
+    if(newLabel === 'Apply label') {
+      return;
+    }
+    this.props.updateLabelState(newLabel, 'add');
+  }
+
+  deleteLabel(event) {
+    let selectedLabel = event.target.value;
+    if(selectedLabel === 'Remove label') {
+      return;
+    }
+    this.props.updateLabelState(selectedLabel);
+  }
+
+  // deleteMessages() {
+  //   this.props.updateMultipleMessages({selected: true}, )
+  // }
 
   render () {
 
@@ -24,7 +44,7 @@ class Toolbar extends Component {
       <div className="row toolbar">
         <div className="col-md-12">
           <p className="pull-right">
-            <span className="badge badge">2</span>
+            <span className="badge badge">{this.props.unreadMessageCount}</span>
             unread messages
           </p>
 
@@ -40,21 +60,21 @@ class Toolbar extends Component {
             Mark As Unread
           </button>
 
-          <select className="form-control label-select">
+          <select className="form-control label-select" onChange={(event) => this.addLabel(event)}>
             <option>Apply label</option>
             <option value="dev">dev</option>
             <option value="personal">personal</option>
             <option value="gschool">gschool</option>
           </select>
 
-          <select className="form-control label-select">
+          <select className="form-control label-select" onChange={(event) => this.deleteLabel(event)}>
             <option>Remove label</option>
             <option value="dev">dev</option>
             <option value="personal">personal</option>
             <option value="gschool">gschool</option>
           </select>
 
-          <button className="btn btn-default">
+          <button className="btn btn-default" onClick={() => this.deleteMessages()}>
             <i className="fa fa-trash-o"></i>
           </button>
         </div>
@@ -69,7 +89,7 @@ class Toolbar extends Component {
 //delete messages
 //add label
 //remove label
-//unread message count
-//select all button state
+//unread message count **
+//select all button state **
 
 export default Toolbar;

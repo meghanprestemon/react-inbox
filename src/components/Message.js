@@ -13,13 +13,6 @@ class Message extends Component {
     this.props.updateState(this.props.id, {selected: isSelected});
   }
 
-  manageSelectAllIcon() {
-
-  }
-
-  //toolbar checked status box - onClick(selected) loop over messages and check if any single message has {selected: true}
-  //      --> return fa-minus-box
-
   render () {
     const read = this.props.read ? 'read' : 'unread';
     const selected = this.props.selected ? 'selected' : '';
