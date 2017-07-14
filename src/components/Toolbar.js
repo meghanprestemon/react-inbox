@@ -11,11 +11,11 @@ class Toolbar extends Component {
   }
 
   markReadMessages() {
-    this.props.updateMultipleMessages({read: true})
+    this.props.updateReadState({read: true})
   }
 
   markUnreadMessages() {
-    this.props.updateMultipleMessages({read: false})
+    this.props.updateReadState({read: false})
   }
 
   addLabel(event) {

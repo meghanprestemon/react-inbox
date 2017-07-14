@@ -11,14 +11,13 @@ class App extends Component {
 
     this.state = {
       messages: [],
-      // messages: emailData,
     }
 
     this.updateRemovedMessages = this.updateRemovedMessages.bind(this);
     this.updateLabelState = this.updateLabelState.bind(this);
     this.updateAll = this.updateAll.bind(this);
-    this.updateMultipleMessages = this.updateMultipleMessages.bind(this);
-    this.updateState = this.updateState.bind(this);
+    this.updateReadState = this.updateReadState.bind(this);
+    this.updateToggle = this.updateToggle.bind(this);
   }
 
 //FETCH AND RENDER MESSAGES
@@ -28,9 +27,9 @@ class App extends Component {
 
   fetchMessages() {
     fetch(MESSAGES_URL)
-      .then(response => response.json())
-      .then(apiObj => this.setMessageState(apiObj._embedded.messages))
-      .catch(e => e);
+    .then(response => response.json())
+    .then(apiObj => this.setMessageState(apiObj._embedded.messages))
+    .catch(e => e);
   }
 
   componentDidMount() {
@@ -65,6 +64,10 @@ class App extends Component {
   }
 
 //HELPER FUNCTIONS
+  findSelectedMessages() {
+    let selectedMsgs = this.state.messages.filter(msg => msg.selected === true);
+    return selectedMsgs.map(msg => msg.id);
+  }
 
   addNewLabel(msg, newLabel) {
     if(!msg.labels.includes(newLabel)) {
@@ -79,6 +82,16 @@ class App extends Component {
     return {labels: msg.labels};
   }
 
+//UPDATE API FUNCTIONS
+  updateApiState(bodyObj) {
+    fetch(`http://localhost:8181/api/messages`, {
+      headers: {
+        'content-type': 'application/json'
+      },
+      method: "PATCH",
+      body: JSON.stringify(bodyObj)
+    })
+  }
 
 //SET.STATE FUNCTIONS
   updateRemovedMessages() {
@@ -94,6 +107,16 @@ class App extends Component {
   }
 
   updateLabelState(newLabel, add) {
+    let selectedMsgIds = this.findSelectedMessages();
+    let bodyObj = {
+      "messageIds": selectedMsgIds,
+      "command": (add === 'add' ? 'addLabel' : 'removeLabel'),
+      "label": newLabel
+    }
+    this.updateApiState(bodyObj);
+
+    //TODO: check for 200 response before updating database
+
     let messages = [];
     let msgLabels;
 
@@ -118,7 +141,17 @@ class App extends Component {
     this.setState({messages})
   }
 
-  updateMultipleMessages(update) {
+  updateReadState(update) {
+    let selectedMsgIds = this.findSelectedMessages();
+    let bodyObj = {
+      "messageIds": selectedMsgIds,
+      "command": "read",
+      "read": update.read
+    }
+    this.updateApiState(bodyObj);
+
+    //TODO: check for 200 response before updating database
+
     let messages = [];
 
     this.state.messages.forEach(msg => {
@@ -132,7 +165,7 @@ class App extends Component {
     this.setState({messages})
   }
 
-  updateState(messageId, update) {
+  updateToggle(messageId, update) {
     this.setState((prevState) => {
       let message = prevState.messages.find(msg => msg.id === messageId);
       let index = prevState.messages.indexOf(message);
@@ -157,13 +190,13 @@ class App extends Component {
           updateRemovedMessages={this.updateRemovedMessages}
           updateLabelState={this.updateLabelState}
           updateAll={this.updateAll}
-          updateMultipleMessages={this.updateMultipleMessages}
+          updateReadState={this.updateReadState}
           disableButton={this.disableButton()}
         />
         <MessageList
           emailData={this.state.messages}
           selectAll={this.state.selectAll}
-          updateState={this.updateState}
+          updateToggle={this.updateToggle}
         />
       </div>
     );

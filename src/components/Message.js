@@ -5,12 +5,24 @@ class Message extends Component {
 
   toggleStarred() {
     let isStarred = !this.props.starred;
-    this.props.updateState(this.props.id, {starred: isStarred});
+
+    fetch(`http://localhost:8181/api/messages`, {
+      headers: {
+        'content-type': 'application/json'
+      },
+      method: "PATCH",
+      body: JSON.stringify({
+        "messageIds": [this.props.id],
+        "command": "star",
+        "star": isStarred
+      })
+    })
+    .then(() => this.props.updateToggle(this.props.id, {starred: isStarred}));
   }
 
   toggleChecked() {
     let isSelected = !this.props.selected;
-    this.props.updateState(this.props.id, {selected: isSelected});
+    this.props.updateToggle(this.props.id, {selected: isSelected});
   }
 
   render () {
@@ -41,8 +53,5 @@ class Message extends Component {
     );
   }
 }
-
-//Starring **
-//Selecting individual messages **
 
 export default Message;

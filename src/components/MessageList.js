@@ -16,14 +16,12 @@ class MessageList extends Component {
             read={email.read}
             subject={email.subject}
             selectAll={this.props.selectAll}
-            updateState={this.props.updateState}
+            updateToggle={this.props.updateToggle}
           />
         )}
       </a>
     );
   }
 }
-
-//Message Display **
 
 export default MessageList;
