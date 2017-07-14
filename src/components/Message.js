@@ -27,7 +27,7 @@ class Message extends Component {
               <input type="checkbox" checked={`${checked}`} onChange={() => this.toggleChecked()}/>
             </div>
             <div className="col-xs-2">
-              <i className={`star fa ${starred}`} onClick={() => {this.toggleStarred(); this.manageSelectAllIcon();}}></i>
+              <i className={`star fa ${starred}`} onClick={() => this.toggleStarred()}></i>
             </div>
           </div>
         </div>

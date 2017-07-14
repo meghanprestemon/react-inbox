@@ -3,12 +3,15 @@ import MessageList from './components/MessageList.js';
 import Toolbar from './components/Toolbar.js';
 import emailData from './emailData.json';
 
+const MESSAGES_URL = 'http://localhost:8181/api/messages';
+
 class App extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      messages: emailData,
+      messages: [],
+      // messages: emailData,
     }
 
     this.updateRemovedMessages = this.updateRemovedMessages.bind(this);
@@ -17,6 +20,23 @@ class App extends Component {
     this.updateMultipleMessages = this.updateMultipleMessages.bind(this);
     this.updateState = this.updateState.bind(this);
   }
+
+//FETCH AND RENDER MESSAGES
+  setMessageState(messages) {
+    this.setState({messages});
+  }
+
+  fetchMessages() {
+    fetch(MESSAGES_URL)
+      .then(response => response.json())
+      .then(apiObj => this.setMessageState(apiObj._embedded.messages))
+      .catch(e => e);
+  }
+
+  componentDidMount() {
+    this.fetchMessages();
+  }
+
 
 //FUNCTIONS TO CALL DURING RENDER
   unreadMessageCount() {
