@@ -18,7 +18,7 @@ class App extends Component {
     this.updateState = this.updateState.bind(this);
   }
 
-//CALCULATION FUNCTIONS
+//FUNCTIONS TO CALL DURING RENDER
   unreadMessageCount() {
     let unreadMsgs = this.state.messages.filter(msg => msg.read === false);
     return unreadMsgs.length;
@@ -35,6 +35,13 @@ class App extends Component {
     }
 
     return selectAll;
+  }
+
+  disableButton() {
+    let selectedMsgs = this.state.messages.filter(msg => msg.selected === true);
+    if(!selectedMsgs.length) {
+      return 'disabled';
+    }
   }
 
 //HELPER FUNCTIONS
@@ -131,6 +138,7 @@ class App extends Component {
           updateLabelState={this.updateLabelState}
           updateAll={this.updateAll}
           updateMultipleMessages={this.updateMultipleMessages}
+          disableButton={this.disableButton()}
         />
         <MessageList
           emailData={this.state.messages}

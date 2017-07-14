@@ -52,29 +52,29 @@ class Toolbar extends Component {
             <i className={`fa fa-${this.props.calculateSelected}square-o`}></i>
           </button>
 
-          <button className="btn btn-default" onClick={() => this.markReadMessages()}>
+          <button className="btn btn-default" disabled={this.props.disableButton} onClick={() => this.markReadMessages()}>
             Mark As Read
           </button>
 
-          <button className="btn btn-default" onClick={() => this.markUnreadMessages()}>
+          <button className="btn btn-default" disabled={this.props.disableButton} onClick={() => this.markUnreadMessages()}>
             Mark As Unread
           </button>
 
-          <select className="form-control label-select" onChange={(event) => this.addLabel(event)}>
+          <select className="form-control label-select" disabled={this.props.disableButton} onChange={(event) => this.addLabel(event)}>
             <option>Apply label</option>
             <option value="dev">dev</option>
             <option value="personal">personal</option>
             <option value="gschool">gschool</option>
           </select>
 
-          <select className="form-control label-select" onChange={(event) => this.deleteLabel(event)}>
+          <select className="form-control label-select" disabled={this.props.disableButton} onChange={(event) => this.deleteLabel(event)}>
             <option>Remove label</option>
             <option value="dev">dev</option>
             <option value="personal">personal</option>
             <option value="gschool">gschool</option>
           </select>
 
-          <button className="btn btn-default" onClick={() => this.deleteMessages()}>
+          <button className="btn btn-default" disabled={this.props.disableButton} onClick={() => this.deleteMessages()}>
             <i className="fa fa-trash-o"></i>
           </button>
         </div>
