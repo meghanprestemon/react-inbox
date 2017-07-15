@@ -45,7 +45,7 @@ class App extends Component {
 
   calculateSelected() {
     let selectAll = 'minus-';
-    let selectedMsgs = this.state.messages.filter(msg => msg.selected === true);
+    let selectedMsgs = this.findSelectedMessages();
 
     if(!selectedMsgs.length) {
       selectAll = '';
@@ -57,7 +57,7 @@ class App extends Component {
   }
 
   disableButton() {
-    let selectedMsgs = this.state.messages.filter(msg => msg.selected === true);
+    let selectedMsgs = this.findSelectedMessages();
     if(!selectedMsgs.length) {
       return 'disabled';
     }
@@ -95,6 +95,13 @@ class App extends Component {
 
 //SET.STATE FUNCTIONS
   updateRemovedMessages() {
+    let selectedMsgIds = this.findSelectedMessages();
+    let bodyObj = {
+      "messageIds": selectedMsgIds,
+      "command": 'delete'
+    }
+    this.updateApiState(bodyObj);
+
     let messages = [];
 
     this.state.messages.forEach(msg => {
@@ -145,7 +152,7 @@ class App extends Component {
     let selectedMsgIds = this.findSelectedMessages();
     let bodyObj = {
       "messageIds": selectedMsgIds,
-      "command": "read",
+      "command": 'read',
       "read": update.read
     }
     this.updateApiState(bodyObj);
