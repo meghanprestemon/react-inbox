@@ -16,6 +16,7 @@ class App extends Component {
     }
 
     this.updateShowCompose = this.updateShowCompose.bind(this);
+    this.addNewMessage = this.addNewMessage.bind(this);
     this.updateRemovedMessages = this.updateRemovedMessages.bind(this);
     this.updateLabelState = this.updateLabelState.bind(this);
     this.updateAll = this.updateAll.bind(this);
@@ -24,14 +25,10 @@ class App extends Component {
   }
 
 //FETCH AND RENDER MESSAGES
-  setMessageState(messages) {
-    this.setState({messages});
-  }
-
   fetchMessages() {
     fetch(MESSAGES_URL)
     .then(response => response.json())
-    .then(apiObj => this.setMessageState(apiObj._embedded.messages))
+    .then(apiObj => this.setState({messages: apiObj._embedded.messages}))
     .catch(e => e);
   }
 
@@ -85,12 +82,12 @@ class App extends Component {
     return {labels: msg.labels};
   }
 
-  updateApiState(bodyObj) {
-    return fetch(`http://localhost:8181/api/messages`, {
+  updateApiState(method, bodyObj) {
+    return fetch(MESSAGES_URL, {
       headers: {
         'content-type': 'application/json'
       },
-      method: "PATCH",
+      method: method,
       body: JSON.stringify(bodyObj)
     })
   }
@@ -100,13 +97,26 @@ class App extends Component {
     this.setState({showCompose: !this.state.showCompose})
   }
 
+  addNewMessage(bodyObj) {
+    this.updateApiState("POST", bodyObj)
+      .then(response => response.json())
+      .then(data => {
+        this.setState((prevState) => {
+          return {
+            messages: [...prevState.messages, data],
+            showCompose: false
+          }
+        })
+      })
+  }
+
   updateRemovedMessages() {
     let selectedMsgIds = this.findSelectedMessages();
     let bodyObj = {
       "messageIds": selectedMsgIds,
       "command": 'delete'
     }
-    this.updateApiState(bodyObj)
+    this.updateApiState("PATCH", bodyObj)
       .then(() => this.setState((prevState) => {
         let messages = prevState.messages.filter(msg => !msg.selected);
         return {messages}
@@ -120,7 +130,7 @@ class App extends Component {
       "command": (add === 'add' ? 'addLabel' : 'removeLabel'),
       "label": newLabel
     }
-    this.updateApiState(bodyObj)
+    this.updateApiState("PATCH", bodyObj)
       .then(() => this.setState((prevState) => {
         let messages = this.state.messages.map(msg => {
           if(msg.selected === true) {
@@ -152,7 +162,7 @@ class App extends Component {
       "command": 'read',
       "read": update.read
     }
-    this.updateApiState(bodyObj)
+    this.updateApiState("PATCH", bodyObj)
       .then(() => this.setState((prevState) => {
         let messages = prevState.messages.map(msg => {
           if(msg.selected === true) {
@@ -194,7 +204,7 @@ class App extends Component {
           updateReadState={this.updateReadState}
           disableButton={this.disableButton()}
         />
-        {this.state.showCompose && <Compose />}
+        {this.state.showCompose && <Compose addNewMessage={this.addNewMessage}/>}
         <MessageList
           emailData={this.state.messages}
           selectAll={this.state.selectAll}
