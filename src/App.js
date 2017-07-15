@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import MessageList from './components/MessageList.js';
 import Toolbar from './components/Toolbar.js';
+import MessageList from './components/MessageList.js';
+import Compose from './components/Compose.js';
 import emailData from './emailData.json';
 
 const MESSAGES_URL = 'http://localhost:8181/api/messages';
@@ -11,8 +12,10 @@ class App extends Component {
 
     this.state = {
       messages: [],
+      showCompose: false,
     }
 
+    this.updateShowCompose = this.updateShowCompose.bind(this);
     this.updateRemovedMessages = this.updateRemovedMessages.bind(this);
     this.updateLabelState = this.updateLabelState.bind(this);
     this.updateAll = this.updateAll.bind(this);
@@ -82,9 +85,8 @@ class App extends Component {
     return {labels: msg.labels};
   }
 
-//UPDATE API FUNCTIONS
   updateApiState(bodyObj) {
-    fetch(`http://localhost:8181/api/messages`, {
+    return fetch(`http://localhost:8181/api/messages`, {
       headers: {
         'content-type': 'application/json'
       },
@@ -94,23 +96,21 @@ class App extends Component {
   }
 
 //SET.STATE FUNCTIONS
+  updateShowCompose() {
+    this.setState({showCompose: !this.state.showCompose})
+  }
+
   updateRemovedMessages() {
     let selectedMsgIds = this.findSelectedMessages();
     let bodyObj = {
       "messageIds": selectedMsgIds,
       "command": 'delete'
     }
-    this.updateApiState(bodyObj);
-
-    let messages = [];
-
-    this.state.messages.forEach(msg => {
-      if(!msg.selected) {
-        messages.push(msg)
-      }
-    });
-
-    this.setState({messages})
+    this.updateApiState(bodyObj)
+      .then(() => this.setState((prevState) => {
+        let messages = prevState.messages.filter(msg => !msg.selected);
+        return {messages}
+      }))
   }
 
   updateLabelState(newLabel, add) {
@@ -120,30 +120,29 @@ class App extends Component {
       "command": (add === 'add' ? 'addLabel' : 'removeLabel'),
       "label": newLabel
     }
-    this.updateApiState(bodyObj);
-
-    //TODO: check for 200 response before updating database
-
-    this.setState((prevState) => {
-      let messages = this.state.messages.map(msg => {
-        if(msg.selected === true) {
-          let msgLabels;
-          if(add === 'add') {
-            msgLabels = this.addNewLabel(msg, newLabel);
-          } else {
-            msgLabels = this.deleteSelectedLabel(msg, newLabel);
+    this.updateApiState(bodyObj)
+      .then(() => this.setState((prevState) => {
+        let messages = this.state.messages.map(msg => {
+          if(msg.selected === true) {
+            let msgLabels;
+            if(add === 'add') {
+              msgLabels = this.addNewLabel(msg, newLabel);
+            } else {
+              msgLabels = this.deleteSelectedLabel(msg, newLabel);
+            }
+            msg = Object.assign({}, msg, msgLabels);
           }
-          msg = Object.assign({}, msg, msgLabels);
-        }
-        return msg;
-      })
-      return {messages}
-    })
+          return msg;
+        })
+        return {messages}
+      }))
   }
 
   updateAll(update) {
-    let messages = this.state.messages.map(msg => Object.assign(msg, update));
-    this.setState({messages})
+    this.setState((prevState) => {
+      let messages = prevState.messages.map(msg => Object.assign(msg, update));
+      return {messages}
+    })
   }
 
   updateReadState(update) {
@@ -153,19 +152,17 @@ class App extends Component {
       "command": 'read',
       "read": update.read
     }
-    this.updateApiState(bodyObj);
+    this.updateApiState(bodyObj)
+      .then(() => this.setState((prevState) => {
+        let messages = prevState.messages.map(msg => {
+          if(msg.selected === true) {
+            msg = Object.assign({}, msg, update);
+          }
+          return msg;
+        })
+        return {messages}
+      }))
 
-    //TODO: check for 200 response before updating database
-
-    this.setState((prevState) => {
-      let messages = prevState.messages.map(msg => {
-        if(msg.selected === true) {
-          msg = Object.assign({}, msg, update);
-        }
-        return msg;
-      })
-      return {messages}
-    })
   }
 
   updateToggle(messageId, update) {
@@ -190,12 +187,14 @@ class App extends Component {
           emailData={this.state.messages}
           unreadMessageCount={this.unreadMessageCount()}
           calculateSelected={this.calculateSelected()}
+          updateShowCompose={this.updateShowCompose}
           updateRemovedMessages={this.updateRemovedMessages}
           updateLabelState={this.updateLabelState}
           updateAll={this.updateAll}
           updateReadState={this.updateReadState}
           disableButton={this.disableButton()}
         />
+        {this.state.showCompose && <Compose />}
         <MessageList
           emailData={this.state.messages}
           selectAll={this.state.selectAll}

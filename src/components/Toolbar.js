@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 
 class Toolbar extends Component {
+  toggleShowCompose() {
+    this.props.updateShowCompose();
+  }
 
   selectAllMessages() {
     if(this.props.calculateSelected !== 'check-') {
@@ -48,7 +51,7 @@ class Toolbar extends Component {
             unread messages
           </p>
 
-          <a className="btn btn-danger">
+          <a className="btn btn-danger" onClick={() => this.toggleShowCompose()}>
             <i className="fa fa-plus"></i>
           </a>
 
