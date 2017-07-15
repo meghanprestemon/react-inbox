@@ -48,6 +48,10 @@ class Toolbar extends Component {
             unread messages
           </p>
 
+          <a className="btn btn-danger">
+            <i className="fa fa-plus"></i>
+          </a>
+
           <button className="btn btn-default" onClick={() => this.selectAllMessages()}>
             <i className={`fa fa-${this.props.calculateSelected}square-o`}></i>
           </button>
@@ -82,14 +86,5 @@ class Toolbar extends Component {
     );
   }
 }
-
-//bulk select/deselect **
-//mark message as read **
-//mark message as unread **
-//delete messages
-//add label
-//remove label
-//unread message count **
-//select all button state **
 
 export default Toolbar;
