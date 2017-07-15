@@ -124,23 +124,21 @@ class App extends Component {
 
     //TODO: check for 200 response before updating database
 
-    let messages = [];
-    let msgLabels;
-
-    this.state.messages.forEach(msg => {
-      if(msg.selected === true) {
-        if(add === 'add') {
-          msgLabels = this.addNewLabel(msg, newLabel);
-        } else {
-          msgLabels = this.deleteSelectedLabel(msg, newLabel);
+    this.setState((prevState) => {
+      let messages = this.state.messages.map(msg => {
+        if(msg.selected === true) {
+          let msgLabels;
+          if(add === 'add') {
+            msgLabels = this.addNewLabel(msg, newLabel);
+          } else {
+            msgLabels = this.deleteSelectedLabel(msg, newLabel);
+          }
+          msg = Object.assign({}, msg, msgLabels);
         }
-        messages.push(Object.assign({}, msg, msgLabels));
-      } else {
-        messages.push(msg);
-      }
-    });
-
-    this.setState({messages})
+        return msg;
+      })
+      return {messages}
+    })
   }
 
   updateAll(update) {
@@ -159,17 +157,15 @@ class App extends Component {
 
     //TODO: check for 200 response before updating database
 
-    let messages = [];
-
-    this.state.messages.forEach(msg => {
-      if(msg.selected === true) {
-        messages.push(Object.assign({}, msg, update));
-      } else {
-        messages.push(msg);
-      }
-    });
-
-    this.setState({messages})
+    this.setState((prevState) => {
+      let messages = prevState.messages.map(msg => {
+        if(msg.selected === true) {
+          msg = Object.assign({}, msg, update);
+        }
+        return msg;
+      })
+      return {messages}
+    })
   }
 
   updateToggle(messageId, update) {
