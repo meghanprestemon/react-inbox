@@ -19,10 +19,12 @@ class Compose extends Component {
   }
 
   handleSubmit(event) {
-    let newMessage = {
-      subject: this.state.subject,
-      body: this.state.body
+    let subject = this.state.subject;
+    let body = this.state.body;
+    if (subject === '' && body === '') {
+      return;
     }
+    let newMessage = {subject, body}
     this.props.addNewMessage(newMessage);
     event.preventDefault();
   }
