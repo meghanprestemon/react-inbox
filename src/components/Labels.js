@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 class Labels extends Component {
-
   render () {
     return (
       <span className="label label-warning">

@@ -45,5 +45,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(MessageList)
-
-// export default MessageList;

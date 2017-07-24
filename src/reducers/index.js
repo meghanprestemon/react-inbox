@@ -51,16 +51,13 @@ function messages(state = {messages: []}, action) {
         return message;
       })}
     case UPDATE_LABEL_STATE:
-    //look at CSS element in browser inspect
       const { selectedLabel, added } = action;
       return {messages: state.messages.map(message => {
         if (message.selected) {
           let msgLabels;
           if (added === 'add') {
-            //make new label array - don't just add label to existing array
             msgLabels = addNewLabel(message, selectedLabel);
           } else {
-            console.log('inside deleted');
             msgLabels = deleteSelectedLabel(message, selectedLabel);
           }
           message = Object.assign({}, message, msgLabels);
