@@ -36,11 +36,12 @@ export function toggleStarred(messageId, starStatus) {
 
   return (dispatch, getState, { Api }) => {
     Api.updateApiState('PATCH', bodyObj)
-
-    dispatch({
-        type: TOGGLE_STARRED,
-        messageId
-    })
+      .then(response => {
+        dispatch({
+          type: TOGGLE_STARRED,
+          messageId
+        })
+      })
   }
 }
 
@@ -53,12 +54,13 @@ export function updateReadState(selectedMsgIds, readStatus) {
 
   return (dispatch, getState, { Api }) => {
     Api.updateApiState('PATCH', bodyObj)
-
-    dispatch({
-        type: UPDATE_READ_STATE,
-        selectedMsgIds,
-        readStatus
-    })
+      .then(response => {
+        dispatch({
+          type: UPDATE_READ_STATE,
+          selectedMsgIds,
+          readStatus
+        })
+      })
   }
 }
 
@@ -71,13 +73,14 @@ export function updateLabelState(selectedMsgIds, selectedLabel, added) {
 
   return (dispatch, getState, { Api }) => {
     Api.updateApiState('PATCH', bodyObj)
-
-    dispatch({
-      type: UPDATE_LABEL_STATE,
-      selectedMsgIds,
-      selectedLabel,
-      added
-    })
+      .then(response => {
+        dispatch({
+          type: UPDATE_LABEL_STATE,
+          selectedMsgIds,
+          selectedLabel,
+          added
+        })
+      })
   }
 }
 
@@ -89,10 +92,11 @@ export function deleteMessages(selectedMsgIds) {
 
   return (dispatch, getState, { Api }) => {
     Api.updateApiState('PATCH', bodyObj)
-
-    dispatch({
-      type: DELETE_MESSAGES
-    })
+      .then(response => {
+        dispatch({
+          type: DELETE_MESSAGES
+        })
+      })
   }
 }
 

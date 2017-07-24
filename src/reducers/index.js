@@ -13,13 +13,13 @@ function addNewLabel(msg, newLabel) {
   if(!msg.labels.includes(newLabel)) {
     msg.labels.push(newLabel);
   }
-  return msg.labels;
+  return {labels: msg.labels};
 }
 
 function deleteSelectedLabel(msg, selectedLabel) {
   let index = msg.labels.indexOf(selectedLabel);
   msg.labels.splice(index, 1);
-  return msg.labels;
+  return {labels: msg.labels};
 }
 
 function messages(state = {messages: []}, action) {
@@ -63,7 +63,7 @@ function messages(state = {messages: []}, action) {
             console.log('inside deleted');
             msgLabels = deleteSelectedLabel(message, selectedLabel);
           }
-          message.labels = msgLabels;
+          message = Object.assign({}, message, msgLabels);
         }
         return message;
       })}
