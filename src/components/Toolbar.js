@@ -10,10 +10,6 @@ import {
 import { bindActionCreators } from 'redux';
 
 class Toolbar extends Component {
-  // toggleShowCompose() {
-  //   this.props.updateShowCompose();
-  // }
-  //
   unreadMessageCount() {
     let unreadMsgs = this.props.messages.filter(msg => msg.read === false);
     return unreadMsgs.length;
@@ -76,7 +72,6 @@ class Toolbar extends Component {
           </p>
 
           <Link to={composePath} className="btn btn-danger">
-            {/* onClick={() => this.toggleShowCompose()} */}
             <i className="fa fa-plus"></i>
           </Link>
 
@@ -118,7 +113,7 @@ class Toolbar extends Component {
 const mapStateToProps = (state, ownProps) => {
   const messages = state.messages;
   const selectedMsgIds = state.messages.filter(message => message.selected === true).map(message => message.id);
-  const path = ownProps.match.path;
+  const path = ownProps.location.pathname;
   return {
     messages,
     selectedMsgIds,

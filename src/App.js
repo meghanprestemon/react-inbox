@@ -4,30 +4,20 @@ import Toolbar from './components/Toolbar.js';
 import MessageList from './components/MessageList.js';
 import Compose from './components/Compose.js';
 
-const Home = props => (
-  <div>
-    <div className='Toolbar'>
-      <Toolbar match={props.match} />
-    </div>
-
-    <div>
-      {props.match.url === '/compose' && <Compose />}
-    </div>
-
-    <div className="MessageList">
-      <MessageList match={props.match} />
-    </div>
-  </div>
-)
-
-const App = () => (
-  <Router>
-    <div className='container-fluid'>
-      <Route exact path="/" component={Home} />
-      <Route exact path="/compose" component={Home} />
-      <Route path="/messages/:id" component={Home} />
-    </div>
-  </Router>
-)
+class App extends Component {
+  render() {
+    return (
+      <Router>
+        <div>
+          <div className='container'>
+            <Route path="/" component={Toolbar} />
+            <Route exact path="/compose" component={Compose} />
+            <Route path="/" component={MessageList} />
+          </div>
+        </div>
+      </Router>
+    )  
+  }
+}
 
 export default App;

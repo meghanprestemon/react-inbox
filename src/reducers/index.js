@@ -6,7 +6,7 @@ import {
   UPDATE_LABEL_STATE,
   DELETE_MESSAGES,
   TOGGLE_SELECT_ALL,
-  TOGGLE_SHOW_COMPOSE,
+  SEND_MESSAGE
 } from '../actions';
 
 function addNewLabel(msg, newLabel) {
@@ -69,13 +69,14 @@ function messages(state = {messages: []}, action) {
         !message.selected
       )}
     case TOGGLE_SELECT_ALL:
-    const { selectStatus } = action;
+      const { selectStatus } = action;
       return {messages: state.messages.map(message => {
         message.selected = selectStatus;
         return message;
       })}
-    case TOGGLE_SHOW_COMPOSE:
-      return {messages: messages, composeState: '/compose'}
+    case SEND_MESSAGE:
+      const { response } = action;
+      return {...state}
     default:
       return state;
   }

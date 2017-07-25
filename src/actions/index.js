@@ -5,7 +5,7 @@ export const UPDATE_READ_STATE = 'UPDATE_READ_STATE';
 export const TOGGLE_SELECT_ALL = 'TOGGLE_SELECT_ALL';
 export const UPDATE_LABEL_STATE = 'UPDATE_LABEL_STATE';
 export const DELETE_MESSAGES = 'DELETE_MESSAGES';
-export const TOGGLE_SHOW_COMPOSE = 'TOGGLE_SHOW_COMPOSE';
+export const SEND_MESSAGE = 'SEND_MESSAGE';
 
 export function getMessages() {
   return (dispatch, getState, { Api }) => {
@@ -109,11 +109,15 @@ export function toggleSelectAll(selectStatus) {
   }
 }
 
-// export function updateShowCompose(composeState) {
-//   console.log(composeState);
-//   return (dispatch, getState) => {
-//     return dispatch({
-//         type: TOGGLE_SHOW_COMPOSE,
-//       })
-//   }
-// }
+export function sendMessage(messageContent) {
+  return (dispatch, getState, { Api }) => {
+    Api.updateApiState('POST', messageContent)
+      .then(response => {
+        console.log(response);
+        dispatch({
+          type: SEND_MESSAGE,
+          response
+        })
+      })
+  }
+}
