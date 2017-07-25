@@ -11,8 +11,6 @@ class Compose extends Component {
   }
 
   handleSubmit(event) {
-    event.preventdefault();
-
     let messageContent = {
       subject: event.target.subject.value,
       body: event.target.body.value
@@ -23,6 +21,8 @@ class Compose extends Component {
     }
 
     this.props.history.push('/')
+
+    // event.preventdefault();
   }
 
   render () {

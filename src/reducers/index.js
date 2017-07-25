@@ -75,8 +75,8 @@ function messages(state = {messages: []}, action) {
         return message;
       })}
     case SEND_MESSAGE:
-      const { response } = action;
-      return {...state}
+      const { message } = action;
+      return {messages: [...state.messages, message]}
     default:
       return state;
   }

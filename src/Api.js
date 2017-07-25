@@ -17,7 +17,7 @@ export default class Api {
     })
     .then(response => {
       if (response.status === 200) {
-        return true;
+        return response;
       }
     })
     .catch(e => {

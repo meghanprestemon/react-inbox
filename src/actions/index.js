@@ -110,13 +110,15 @@ export function toggleSelectAll(selectStatus) {
 }
 
 export function sendMessage(messageContent) {
+  console.log('made it to action');
   return (dispatch, getState, { Api }) => {
     Api.updateApiState('POST', messageContent)
-      .then(response => {
-        console.log(response);
+      .then(response => response.json())
+      .then(message => {
+        console.log(message);
         dispatch({
           type: SEND_MESSAGE,
-          response
+          message
         })
       })
   }
