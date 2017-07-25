@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import {
   updateReadState,
   updateLabelState,
@@ -31,6 +32,13 @@ class Toolbar extends Component {
 		return selectAll;
 	}
 
+  disableButton() {
+    let selectedMsgs = this.props.messages.filter(msg => msg.selected === true);
+    if(!selectedMsgs.length) {
+      return 'disabled';
+    }
+  }
+
   selectAllMessages() {
     if(this.calculateSelected() !== 'check-') {
       this.props.toggleSelectAll(true)
@@ -56,7 +64,8 @@ class Toolbar extends Component {
   }
 
   render () {
-    const { selectedMsgIds } = this.props;
+    const { selectedMsgIds, path } = this.props;
+    const composePath = path !== '/compose' ? '/compose' : '/';
 
     return (
       <div className="row toolbar">
@@ -66,37 +75,38 @@ class Toolbar extends Component {
             unread messages
           </p>
 
-          <a className="btn btn-danger" onClick={() => this.toggleShowCompose()}>
+          <Link to={composePath} className="btn btn-danger">
+            {/* onClick={() => this.toggleShowCompose()} */}
             <i className="fa fa-plus"></i>
-          </a>
+          </Link>
 
           <button className="btn btn-default" onClick={() => this.selectAllMessages()}>
             <i className={`fa fa-${this.calculateSelected()}square-o`}></i>
           </button>
 
-          <button className="btn btn-default" disabled={this.props.disableButton} onClick={() => this.props.updateReadState(selectedMsgIds, true)}>
+          <button className="btn btn-default" disabled={this.disableButton()} onClick={() => this.props.updateReadState(selectedMsgIds, true)}>
             Mark As Read
           </button>
 
-          <button className="btn btn-default" disabled={this.props.disableButton} onClick={() => this.props.updateReadState(selectedMsgIds, false)}>
+          <button className="btn btn-default" disabled={this.disableButton()} onClick={() => this.props.updateReadState(selectedMsgIds, false)}>
             Mark As Unread
           </button>
 
-          <select className="form-control label-select" disabled={this.props.disableButton} onChange={(event) => this.addLabel(event)}>
+          <select className="form-control label-select" disabled={this.disableButton()} onChange={(event) => this.addLabel(event)}>
             <option>Apply label</option>
             <option value="dev">dev</option>
             <option value="personal">personal</option>
             <option value="gschool">gschool</option>
           </select>
 
-          <select className="form-control label-select" disabled={this.props.disableButton} onChange={(event) => this.deleteLabel(event)}>
+          <select className="form-control label-select" disabled={this.disableButton()} onChange={(event) => this.deleteLabel(event)}>
             <option>Remove label</option>
             <option value="dev">dev</option>
             <option value="personal">personal</option>
             <option value="gschool">gschool</option>
           </select>
 
-          <button className="btn btn-default" disabled={this.props.disableButton} onClick={() => this.props.deleteMessages(selectedMsgIds)}>
+          <button className="btn btn-default" disabled={this.disableButton()} onClick={() => this.props.deleteMessages(selectedMsgIds)}>
             <i className="fa fa-trash-o"></i>
           </button>
         </div>
@@ -108,9 +118,11 @@ class Toolbar extends Component {
 const mapStateToProps = (state, ownProps) => {
   const messages = state.messages;
   const selectedMsgIds = state.messages.filter(message => message.selected === true).map(message => message.id);
+  const path = ownProps.match.path;
   return {
     messages,
-    selectedMsgIds
+    selectedMsgIds,
+    path
   }
 }
 
